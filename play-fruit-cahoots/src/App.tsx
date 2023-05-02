@@ -5,8 +5,7 @@ import * as signalR from "@microsoft/signalr";
 
 function App() {
   let connection = new signalR.HubConnectionBuilder()
-    // .withUrl("/api/chathub")
-    .withUrl("http://localhost:5075/api/chathub")
+    .withUrl("/chatHub")
     .configureLogging(signalR.LogLevel.Debug)
     .withAutomaticReconnect()
     .build();
@@ -14,7 +13,6 @@ function App() {
   connection.on("ReceiveMessage", data => {
     console.log("ReceiveMessage", data);
   });
-
 
   async function start() {
     try {
@@ -27,8 +25,11 @@ function App() {
   };
 
   function send(): void {
-    console.log(connection)
     connection.send("SendMessage", "Hello", "world")
+  }
+
+  function close() {
+    connection.stop();
   }
 
   return (
@@ -46,8 +47,9 @@ function App() {
         >
           Learn React
         </a>
-        <button onClick={() => send()}>click me</button>
         <button onClick={() => start()}>start</button>
+        <button onClick={() => send()}>send</button>
+        <button onClick={() => close()}>close</button>
       </header>
     </div>
   );

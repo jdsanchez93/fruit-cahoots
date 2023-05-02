@@ -43,6 +43,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors();
-app.MapHub<ChatHub>("/api/chatHub");
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
