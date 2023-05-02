@@ -15,18 +15,6 @@ builder.Services.AddSignalR(hubOptions =>
     hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .WithMethods("GET", "POST")
-                .AllowCredentials();
-        });
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,7 +30,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors();
 app.MapHub<ChatHub>("/chatHub");
 
 app.MapFallbackToFile("index.html");
