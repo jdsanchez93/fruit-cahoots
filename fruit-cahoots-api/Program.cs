@@ -45,4 +45,6 @@ app.MapControllers();
 app.UseCors();
 app.MapHub<ChatHub>("/chatHub");
 
+app.MapFallbackToFile("index.html");
+
 app.Run();
