@@ -6,7 +6,6 @@ import * as signalR from "@microsoft/signalr";
 function App() {
   let connection = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
-    .configureLogging(signalR.LogLevel.Debug)
     .withAutomaticReconnect()
     .build();
 
@@ -14,10 +13,18 @@ function App() {
     console.log("ReceiveMessage", data);
   });
 
+  connection.on('LobbyCreated', data => {
+    console.log('LobbyCreated', data);
+  });
+
+  connection.on('GameStarted', data => {
+    console.log('GameStarted', data)
+  })
+
   async function start() {
     try {
       await connection.start();
-      console.log("SignalR Connected.");
+      console.log("SignalR Connected.", connection.connectionId);
     } catch (err) {
       console.log(err);
       setTimeout(start, 5000);
@@ -32,24 +39,21 @@ function App() {
     connection.stop();
   }
 
+  function createGame() {
+    connection.send('CreateLobby')
+  }
+
+  function startGame() {
+    connection.send('StartGame', 'test group')
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <button onClick={() => start()}>start</button>
-        <button onClick={() => send()}>send</button>
-        <button onClick={() => close()}>close</button>
+        <button onClick={() => start()}>open connection</button>
+        <button onClick={() => createGame()}>create lobby</button>
+        <button onClick={() => startGame()}>start game</button>
+        <button onClick={() => close()}>close connection</button>
       </header>
     </div>
   );
